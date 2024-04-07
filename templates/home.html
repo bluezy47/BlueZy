@@ -17,24 +17,17 @@
                         <div class="col-5 chat-selection-wrapper">
                             <div class="chat-selection-sub-wrapper">
                                 <!-- USERS LIST -->
-                                <div class="select-chat-user-wrapper">
-                                    <div class="chat-user">
-                                        <img src="./static/img/nimeshi.JPG" alt="Profile Image">
-                                        <div class="user-info">
-                                            <span class="person-name">Nimeshi Bandara</span>
-                                            <span class="last-online">(last online: 8:00 am)</span>
+                                {{range .Users}}
+                                    <div class="select-chat-user-wrapper">
+                                        <div class="chat-user">
+                                            <img src="./static/img/{{.Picture}}" alt="Profile Image">
+                                            <div class="user-info">
+                                                <span class="person-name">{{.FullName}}</span>
+                                                <span class="last-online">{{.LastOnline}}</span>
+                                            </div>
                                         </div>
                                     </div>
-                                </div>
-                                <div class="select-chat-user-wrapper">
-                                    <div class="chat-user">
-                                        <img src="./static/img/anuruddha.JPG" alt="Profile Image">
-                                        <div class="user-info">
-                                            <span class="person-name">Anuruddha Bandara</span>
-                                            <span class="last-online">(last online: 9:00 am)</span>
-                                        </div>
-                                    </div>
-                                </div>
+                                {{end}}
                             </div>
                         </div>
                         <!-- SELECTED CHAT CONTENT -->

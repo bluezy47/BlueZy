@@ -1,34 +1,43 @@
 package main
 import (
-	"log"
-
-	"github.com/gofiber/fiber/v2"
-	"github.com/gofiber/template/html/v2"
+	"os"
+	"fmt"
+	"context"
+	//
+	"github.com/bluezy47/Hello-World/internal"
+	"github.com/bluezy47/Hello-World/pkg/sql"
 )
 
 
 func main() {
-	// make the HTML engine
-	engine := html.New("./templates", ".html");
-	app := fiber.New(fiber.Config{
-		Views: engine,
-	});
+	ctx := context.Background();
 
-	// serve the static files
-	app.Static("/static", "./templates/static")
+	// TODO: Intergrate the Redis Connection...
 
-	// define the routes
-	app.Get("/", func(c *fiber.Ctx) error {
-		data := map[string]interface{}{
-			"Title": "Hello, World!",
-			"Message": "This Message is from thea Server",
-		}
-		//
-		// RENDER THE HOME PAGE
-		return c.Render("home", data, "base");
-	})
+	// init the DB connection
+	dbConfig := sql.DBConfig{
+		Username: "root",
+		Password: "12345678",
+		Host: "localhost",
+		Port: "3306",
+		Database: "bluezy_chat",
+		MaxOpenConnections: 10,
+		MaxIdleConnections: 5,
+	}
+	dbConn, err := sql.ConnInit(dbConfig);
+	if err != nil {
+		fmt.Println("[SQL] Conncetion Initilization Failed!", err);
+		os.Exit(1);
+	}
+	fmt.Println("[SQL] Connection Initilized Successfully!");
+
 	//
-	// start the server
-	log.Println("Server is running on http://localhost:3000");
-	log.Fatal(app.Listen(":3000"));
+	helloworldServer, err := internal.NewServer(ctx, "127.0.0.1:5050", dbConn);
+	if err != nil {
+		fmt.Println("Error: ", err);
+		return;
+	}
+	//
+	helloworldServer.Start();
+	fmt.Println("Server is running ... :5050");
 }
