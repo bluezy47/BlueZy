@@ -1,0 +1,55 @@
+<!-- home.html -->
+{{define "content"}}
+    <!-- Chat App Home -->
+    <div id="chatHomeRoot" class="chat-home-root-wrapper container h-100">
+        <div class="row chat-home-wrapper">
+            
+            <!-- LEFT ICONS -->
+            <div class="col-1 left-icon-wrapper">
+                <!-- Left side icons will add here... -->
+            </div>
+
+            <!-- CHATS AND BODY -->
+            <div class="col-8">
+                <div class="h-100 middle-chat-wrapper">
+                    <div class="row h-100">
+                        <!-- ALL CHAT USERS SECTION -->
+                        <div class="col-5 chat-selection-wrapper">
+                            <div class="chat-selection-sub-wrapper">
+                                <!-- USERS LIST -->
+                                <div class="select-chat-user-wrapper">
+                                    <div class="chat-user">
+                                        <img src="./static/img/nimeshi.JPG" alt="Profile Image">
+                                        <div class="user-info">
+                                            <span class="person-name">Nimeshi Bandara</span>
+                                            <span class="last-online">(last online: 8:00 am)</span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="select-chat-user-wrapper">
+                                    <div class="chat-user">
+                                        <img src="./static/img/anuruddha.JPG" alt="Profile Image">
+                                        <div class="user-info">
+                                            <span class="person-name">Anuruddha Bandara</span>
+                                            <span class="last-online">(last online: 9:00 am)</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- SELECTED CHAT CONTENT -->
+                        <div class="col-7 selected-chat-wrapper">
+                            <div class="selected-sub-chat-wrapper">
+                            </div>
+                        </div>                        
+                    </div>
+                </div> 
+            </div>
+
+            <!-- SELECTED PERSON INFOMATIONS -->
+            <div class="col-3">
+                <div class="h-100 right-person-info-wrapper"></div>
+            </div>
+        </div>
+    </div>
+{{end}}
