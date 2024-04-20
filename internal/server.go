@@ -1,5 +1,6 @@
 package internal
 import (
+	"fmt"
 	"context"
 	"database/sql"
 	"net/http"
@@ -50,8 +51,9 @@ func (s *Server) routes(ap *fiber.App, session *session.Store) {
 	//
 	routes.Get("/login", func(c fiber.Ctx) error {
 		data := map[string]interface{}{}
-		return c.Render("login", data, "base")
+		return c.Render("login", data);
 	}); 
+	//
 	//
 	routes.Get("helloworld", func(c fiber.Ctx) error {
 		// check if the user is authenticated...
@@ -64,7 +66,8 @@ func (s *Server) routes(ap *fiber.App, session *session.Store) {
 		}
 		isAuthenticated := sessionInfo.Get("isAuthenticated");
 		if isAuthenticated == nil || isAuthenticated == false {
-			return c.Redirect().To("/login");
+			// return c.Redirect().To("/login");
+			fmt.Println("::[Server][routes][helloworld] User is not authenticated ::");
 		}
 		//
 		users, err := s.userService.FetchAll();
