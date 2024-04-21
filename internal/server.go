@@ -1,31 +1,34 @@
 package internal
+
 import (
-	"fmt"
 	"context"
 	"database/sql"
+	"fmt"
+	"log"
 	"net/http"
+
 	_ "github.com/go-sql-driver/mysql"
+
 	//
-	"github.com/bluezy47/Hello-World/internal/services"
-	"github.com/bluezy47/Hello-World/internal/oauth"
 	"github.com/bluezy47/Hello-World/internal/api"
+	"github.com/bluezy47/Hello-World/internal/oauth"
+	"github.com/bluezy47/Hello-World/internal/services"
+
 	//
-	"github.com/gofiber/fiber/v3"
-	"github.com/gofiber/fiber/v3/middleware/session"
+	"github.com/gofiber/fiber/v2"
+	"github.com/gofiber/contrib/websocket"
 	"github.com/gofiber/template/html/v2"
 )
 
 type Server struct {
 	listenAddr string;
 	userService *services.UserService;
-	sessionStore *session.Store;
 }
 
 func NewServer(ctx context.Context, listenAddr string, db *sql.DB) (*Server, error) {
 	return &Server{
 		listenAddr: listenAddr,
 		userService: services.NewUserService(db),
-		sessionStore: session.New(),
 	}, nil
 }
 //
@@ -34,10 +37,21 @@ func (s *Server) Start() error {
 	app := fiber.New(fiber.Config{
 		Views: engine,
 	});
-
+	//
+	// set the middleware for the ws 
+	// todo: please move this to a separate function or package in future...
+	app.Use("/ws", func(c *fiber.Ctx) error {
+		if websocket.IsWebSocketUpgrade(c) {
+			c.Locals("allowed", true)
+			return c.Next()
+		}
+		return fiber.ErrUpgradeRequired
+	});
+	//
 	// serve the static files
 	app.Static("/static", "../templates/static")
-	s.routes(app, s.sessionStore);
+	s.routes(app);
+
 
 	// start the server
 	if err := app.Listen(s.listenAddr); err != nil {
@@ -46,30 +60,17 @@ func (s *Server) Start() error {
 	return nil;
 }
 //
-func (s *Server) routes(ap *fiber.App, session *session.Store) {
+func (s *Server) routes(ap *fiber.App) {
 	routes := ap.Group("/");
 	//
-	routes.Get("/login", func(c fiber.Ctx) error {
+	// user login page
+	routes.Get("/login", func(c *fiber.Ctx) error {
 		data := map[string]interface{}{}
 		return c.Render("login", data);
 	}); 
 	//
-	//
-	routes.Get("helloworld", func(c fiber.Ctx) error {
-		// check if the user is authenticated...
-		sessionInfo, err := session.Get(c);
-		if err != nil {
-			// todo : check here!
-			return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
-				"error": err.Error(),
-			});
-		}
-		isAuthenticated := sessionInfo.Get("isAuthenticated");
-		if isAuthenticated == nil || isAuthenticated == false {
-			// return c.Redirect().To("/login");
-			fmt.Println("::[Server][routes][helloworld] User is not authenticated ::");
-		}
-		//
+	// Home Page
+	routes.Get("helloworld", func(c *fiber.Ctx) error {
 		users, err := s.userService.FetchAll();
 		if err != nil {
 			return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
@@ -85,8 +86,19 @@ func (s *Server) routes(ap *fiber.App, session *session.Store) {
 		return c.Render("home", data, "base");
 	});
 	//
+	// Handle the websocket connection...
+	routes.Get("ws/helloworld", websocket.New(func(c *websocket.Conn) {
+		log.Println(c.Locals("allowed"))
+		log.Println(c.Params("id"))
+		log.Println(c.Query("email"))
+		log.Println(c.Cookies("session"))
+		// todo: here you can add some authentication logic if you want...
+		// call the websocket handler
+		services.WebsocketHandler(c);
+	}));
+	//
 	// OAuth2.0 Redirect Endpoint... `helloworld/user-auth`
-	routes.Get("helloworld/user-auth", func(c fiber.Ctx) error {
+	routes.Get("helloworld/user-auth", func(c *fiber.Ctx) error {
 		oauth2, err := oauth.NewOAuth();
 		if err != nil {
 			return c.Status(http.StatusInternalServerError).SendString(err.Error())
@@ -103,16 +115,8 @@ func (s *Server) routes(ap *fiber.App, session *session.Store) {
 			if err != nil {
 				return c.Status(http.StatusInternalServerError).SendString(err.Error());
 			}
-			// set the New session for the user.
-			session, err := session.Get(c);
-			if err != nil {
-				// todo: check here!...
-				return c.Status(http.StatusInternalServerError).SendString(err.Error());
-			}
-			session.Set("user", userInfo["email"]);
-			session.Set("isAuthenticated", true);
-			//
-			return c.Redirect().To("/helloworld");
+			fmt.Println(userInfo); // todo: in future, use this data to make a session user!.
+			return c.Redirect("/helloworld");
 		}
 		return oauth2.RedirectGoogleLogin(c);
 	});

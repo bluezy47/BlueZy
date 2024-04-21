@@ -8,7 +8,7 @@ import (
 	"net/url"
 	"encoding/json"
 
-	"github.com/gofiber/fiber/v3"
+	"github.com/gofiber/fiber/v2"
 )
 
 type OAuth struct {
@@ -43,9 +43,8 @@ func NewOAuth() (*OAuth, error ) {
 	}, nil
 }
 
-
 //	RedirectGoogleLogin redirects the user to the google oauth consent screen
-func (o *OAuth) RedirectGoogleLogin(c fiber.Ctx) error {
+func (o *OAuth) RedirectGoogleLogin(c *fiber.Ctx) error {
 	if o.clientID == "" || o.clientSecret == "" {
 		log.Println("::[OAuth][RedirectGoogleLogin] Client ID or Client Secret is not set ::");
 		// send a 500 status code. 
@@ -53,9 +52,8 @@ func (o *OAuth) RedirectGoogleLogin(c fiber.Ctx) error {
 	}
 	redirectURL := fmt.Sprintf("https://accounts.google.com/o/oauth2/v2/auth?response_type=code&client_id=%s&redirect_uri=%s&scope=https://www.googleapis.com/auth/userinfo.email&prompt=select_account", o.clientID, o.redirectURL);
 	//
-	return c.Redirect().To(redirectURL)
+	return c.Redirect(redirectURL)
 }
-
 
 // HandleInitCode handles the code from the google oauth consent screen
 func (o *OAuth) HandleInitCode(code string) (map[string]interface{}, error) {

@@ -19,7 +19,7 @@
                                 <!-- USERS LIST -->
                                 {{range .Users}}
                                     <div class="select-chat-user-wrapper">
-                                        <div class="chat-user">
+                                        <div class="chat-user" user-email="{{.Email}}" name="{{.Name}}" full-name="{{.FullName}}" last-online="{{.LastOnline}}" >
                                             <img src="./static/img/{{.Picture}}" alt="Profile Image">
                                             <div class="user-info">
                                                 <span class="person-name">{{.FullName}}</span>
@@ -32,8 +32,26 @@
                         </div>
                         <!-- SELECTED CHAT CONTENT -->
                         <div class="col-7 selected-chat-wrapper">
+                            <div class="selected-user-wrapper">
+                                <div class="selected-user-info">
+                                    <img src="" alt="Profile Image">
+                                    <div class="user-info">
+                                        <span class="person-name">--</span>
+                                        <span class="last-online">--</span>
+                                    </div>
+                                </div>
+                            </div>
                             <div class="selected-sub-chat-wrapper">
-                                <h1>Hello</h1>
+                                <div class="chat-list-wrapper">
+                                    <!-- All chat message will add here!! -->
+                                </div>
+                                
+                                <!-- for typing and sending the message! -->
+                                <div class="chat-input-wrapper">
+                                    <input type="text" class="chat-input" placeholder="Type a message...">
+                                    <button class="chat-send-btn">></button>
+                                </div>
+                                <!-- end -->
                             </div>
                         </div>                        
                     </div>
@@ -46,4 +64,7 @@
             </div>
         </div>
     </div>
+
+    <!-- load the js -->
+    <script src="./static/js/home.js"></script>
 {{end}}

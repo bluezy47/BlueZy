@@ -3,6 +3,7 @@ body {
     background-color: rgba(148, 213, 254, 0.638);
     padding-bottom: 2%;
     padding-top: 2%;
+    font-family: serif;
 }
 
 /* Styles for the Chat Home Main Wrapper */
@@ -88,3 +89,108 @@ body {
     color: #888;
 }
 /* ---------------------------------------------------------------------------------------------------- */
+
+
+/* =================== MIDDLE CONTENT ================== */
+/* ---------------------- styles for the Single Chat Content ------------------------------ */
+.selected-chat-wrapper {
+    position: relative;
+}
+
+.selected-sub-chat-wrapper .chat-list-wrapper {
+    overflow-y: auto;
+}
+
+.selected-sub-chat-wrapper .chat-list-wrapper div.single-chat-wrapper {
+    background-color: rgb(255 255 255);
+    width: 90%;
+    padding: 20px;
+    height: auto;
+    margin-bottom: 5px;
+    box-shadow: rgba(50, 50, 93, 0.25) 0px 2px 5px -1px, rgba(0, 0, 0, 0.3) 0px 1px 3px -1px;
+}
+
+.selected-sub-chat-wrapper .chat-list-wrapper div.single-chat-wrapper.sent {
+    border-radius: 20px 20px 0px 20px;
+}
+
+.selected-sub-chat-wrapper .chat-list-wrapper div.single-chat-wrapper.received {
+    border-radius: 20px 20px 20px 0px;
+    background-color: #dfdbd1;
+}
+
+
+
+.selected-sub-chat-wrapper .chat-list-wrapper div.single-chat-wrapper p {
+    margin: 0px;
+    font-size: small;
+    color: #1e1d1d;
+    letter-spacing: 1px;
+    font-style: normal;
+    font-family: serif;
+}
+
+.selected-sub-chat-wrapper .chat-input-wrapper {
+    position: absolute;
+    bottom: 10px;
+    width: 90%;
+    padding: 20px;
+    background-color: aliceblue;
+    border-radius: 10px;
+    box-shadow: rgba(0, 0, 0, 0.1) 0px 4px 12px;
+}
+
+.selected-sub-chat-wrapper .chat-input-wrapper button{
+    background-color: rgb(153 251 50);
+    border: none;
+    border-radius: 90%;
+    padding: 5px;
+    width: 40px;
+    height: 40px;
+    font-weight: bolder;
+    box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
+}
+
+.selected-sub-chat-wrapper .chat-input-wrapper input[type="text"] {
+    width: 80%;
+    border: none;
+    background-color: aliceblue;
+    padding: 7px;
+    border-radius: 5px;
+    font-weight: 500;
+    font-size: 15px;
+}
+
+.selected-sub-chat-wrapper .chat-input-wrapper input[type="text"]:active {
+    border: none;
+}
+
+/* ---------------------------------------------------------------------------------------- */
+
+/* ---------------------- styles for selected user Heder info ------------------------------ */
+.selected-chat-wrapper .selected-user-info {
+    display: flex;
+    align-items: center; /* Align items vertically in the center */
+    margin-bottom: 20px;
+}
+
+.selected-chat-wrapper .selected-user-info img {
+    width: 50px; /* Adjust as needed */
+    height: 50px; /* Adjust as needed */
+    border-radius: 50%; /* Make the image round */
+    margin-right: 10px; /* Add some spacing between the image and text */
+}
+
+.selected-chat-wrapper .selected-user-info .user-info {
+    display: flex;
+    flex-direction: column;
+}
+
+.selected-chat-wrapper .selected-user-info .user-info .person-name {
+    font-weight: bold;
+}
+
+.selected-chat-wrapper .selected-user-info .user-info .last-online {
+    font-style: italic;
+}
+/* ---------------------------------------------------------------------------------------- */
